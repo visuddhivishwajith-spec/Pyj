@@ -1,0 +1,23 @@
+name: Build Windows EXE
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install PyQt6 pyswisseph pyinstaller
+          pip install .
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed --add-data "src/jhora/data;jhora/data" main.py
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstrologySoftware
+          path: dist/main.exe
